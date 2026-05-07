@@ -25,6 +25,12 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
+  body{ zoom:120%;
+  }
+
+  .modal-overlay.active{
+    zoom: 83.33%;
+  }
 
   body {
     font-family: 'DM Sans', sans-serif;
@@ -933,7 +939,9 @@
   footer strong { color: var(--accent); }
 
   /* ─── RESPONSIVE ─── */
-  @media (max-width: 768px) {
+  @media (max-width: 993px) {
+    body{ zoom:100%; }
+    .modal-overlay.active{ zoom: 100%;}
     h1 { font-weight: 700; }
     .stat-num { font-size: 1.8rem; }
     nav ul { display: none; }
