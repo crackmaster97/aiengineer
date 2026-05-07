@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Engineer — Soluciones de Inteligencia Artificial</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --border: rgba(255,255,255,0.07);
+    --accent: #00e5b0;
+    --accent2: #7c6fef;
+    --text: #f0f0f5;
+    --muted: #7a7a8c;
+    --danger: #ff4d6d;
+    --card-bg: #13131a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  /* Zoom para computadoras */
+  body {
+    zoom: 125%; 
+  }
+
+  /* Restablecer a normal para celulares */
+  @media (max-width: 993px) {
+     body {
+          zoom: 100%;
+     }
+     .modal-overlay.active {
+          zoom: 100%;
+     }
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+  
+  
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0.95rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(9,9,15,0.90);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid var(--border);
+    transition: padding 0.3s ease;
+  }
+
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+  .logo span { color: var(--accent); }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2.2rem;
+    align-items: center;
+  }
+
+  nav ul a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.86rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  nav ul a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent) !important;
+    color: #000 !important;
+    padding: 0.5rem 1.2rem;
+    border-radius: 6px;
+    font-weight: 600 !important;
+    transition: opacity 0.2s !important;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ─── PERSPECTIVE SWITCH ─── */
+  .perspective-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.28rem 0.85rem 0.28rem 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.25s;
+    flex-shrink: 0;
+  }
+  .perspective-switch:hover { border-color: rgba(0,229,176,0.3); }
+
+  .switch-label {
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    white-space: nowrap;
+  }
+  .switch-label.left  { color: var(--accent); }
+  .switch-label.right { color: var(--muted); }
+
+  .switch-track {
+    width: 34px;
+    height: 18px;
+    background: var(--surface);
+    border: 1.5px solid rgba(0,229,176,0.3);
+    border-radius: 100px;
+    position: relative;
+    transition: background 0.3s, border-color 0.3s;
+    flex-shrink: 0;
+  }
+
+  .switch-thumb {
+    position: absolute;
+    top: 2px; left: 2px;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+    box-shadow: 0 1px 4px rgba(0,229,176,0.5);
+  }
+
+  /* Negocios mode */
+  body.mode-negocios .switch-label.left  { color: var(--muted); }
+  body.mode-negocios .switch-label.right { color: var(--accent2); }
+  body.mode-negocios .switch-thumb {
+    transform: translateX(16px);
+    background: var(--accent2);
+    box-shadow: 0 1px 4px rgba(124,111,239,0.5);
+  }
+  body.mode-negocios .switch-track {
+    border-color: rgba(124,111,239,0.35);
+  }
+  body.mode-negocios .perspective-switch:hover {
+    border-color: rgba(124,111,239,0.4);
+  }
+
+  /* ─── DUAL CONTENT SYSTEM ─── */
+  [data-view] { transition: opacity 0.35s ease, transform 0.35s ease; }
+
+  /* Default: técnico visible */
+  [data-view="negocios"] { display: none; opacity: 0; }
+  [data-view="tecnico"]  { display: block; opacity: 1; }
+
+  /* When switching — fade out phase */
+  body.switching [data-view="tecnico"],
+  body.switching [data-view="negocios"] {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  /* Negocios mode — show negocios, hide tecnico */
+  body.mode-negocios [data-view="tecnico"]   { display: none; opacity: 0; }
+  body.mode-negocios [data-view="negocios"]  { display: block; opacity: 1; transform: translateY(0); }
+
+  /* Inline span variants (used inside paragraphs) */
+  span[data-view] { display: inline; }
+  body:not(.mode-negocios) span[data-view="negocios"] { display: none; }
+  body.mode-negocios span[data-view="tecnico"]          { display: none; }
+  body.mode-negocios span[data-view="negocios"]         { display: inline; }
+
+  /* ─── PERSPECTIVE INDICATOR PILL ─── */
+  .mode-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 100px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    transition: background 0.4s, border-color 0.4s, color 0.4s;
+  }
+  .mode-pill.tecnico-pill {
+    background: rgba(0,229,176,0.08);
+    border: 1px solid rgba(0,229,176,0.2);
+    color: var(--accent);
+  }
+  .mode-pill.negocios-pill {
+    background: rgba(124,111,239,0.1);
+    border: 1px solid rgba(124,111,239,0.25);
+    color: var(--accent2);
+    display: none;
+  }
+  body.mode-negocios .mode-pill.tecnico-pill  { display: none; }
+  body.mode-negocios .mode-pill.negocios-pill { display: inline-flex; }
+
+  /* ─── HERO ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 2.5rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(0,229,176,0.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+    transition: background 0.6s ease;
+  }
+  body.mode-negocios .hero-glow {
+    background: radial-gradient(circle, rgba(124,111,239,0.12) 0%, transparent 70%);
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(124,111,239,0.1) 0%, transparent 70%);
+    bottom: 0; left: -100px;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(0,229,176,0.08);
+    border: 1px solid rgba(0,229,176,0.2);
+    color: var(--accent);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: fadeDown 0.6s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  h1 {
+    font-family: 'inter', sans-serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 800;
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+  h1 .line-accent {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--accent);
+    transition: -webkit-text-stroke-color 0.5s ease;
+  }
+  body.mode-negocios h1 .line-accent {
+    -webkit-text-stroke-color: var(--accent2);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    font-weight: 300;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.4s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,229,176,0.3);
+  }
+  body.mode-negocios .btn-primary {
+    background: var(--accent2);
+  }
+  body.mode-negocios .btn-primary:hover {
+    box-shadow: 0 10px 30px rgba(124,111,239,0.35);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 0.9rem 2rem;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent);
+    background: rgba(0,229,176,0.05);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 5rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+  .stat-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    transition: color 0.4s;
+  }
+  body.mode-negocios .stat-num { color: var(--accent2); }
+
+  .stat-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── SECTION COMMON ─── */
+  section { padding: 6rem 2.5rem; }
+  .section-inner { max-width: 1100px; margin: 0 auto; }
+
+  .section-tag {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    transition: color 0.4s;
+  }
+  body.mode-negocios .section-tag { color: var(--accent2); }
+
+  .section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .section-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 500px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ─── PRODUCTS GRID ─── */
+  #productos { background: var(--surface); }
+
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3.5rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    cursor: pointer;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .product-card:hover {
+    border-color: rgba(0,229,176,0.25);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  }
+  body.mode-negocios .product-card:hover {
+    border-color: rgba(124,111,239,0.3);
+  }
+  .product-card:hover::before { opacity: 1; }
+
+  .product-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .product-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* View badge on card */
+  .view-badge {
+    display: inline-block;
+    font-size: 0.64rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.15rem 0.55rem;
+    border-radius: 100px;
+    margin-bottom: 0.6rem;
+    transition: background 0.4s, color 0.4s, border-color 0.4s;
+  }
+  .view-badge.tecnico-badge {
+    background: rgba(0,229,176,0.07);
+    border: 1px solid rgba(0,229,176,0.18);
+    color: var(--accent);
+  }
+  .view-badge.negocios-badge {
+    background: rgba(124,111,239,0.08);
+    border: 1px solid rgba(124,111,239,0.22);
+    color: var(--accent2);
+    display: none;
+  }
+  body.mode-negocios .view-badge.tecnico-badge  { display: none; }
+  body.mode-negocios .view-badge.negocios-badge { display: inline-block; }
+
+  .product-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+  }
+
+  /* Feature bullets on card */
+  .product-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin-bottom: 1.5rem;
+  }
+  .product-bullets li {
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding-left: 1.1rem;
+    position: relative;
+    line-height: 1.5;
+  }
+  .product-bullets li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+    transition: color 0.4s;
+  }
+  body.mode-negocios .product-bullets li::before { color: var(--accent2); }
+
+  .product-from {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .product-price {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    transition: color 0.4s;
+  }
+  body.mode-negocios .product-price { color: var(--accent2); }
+
+  .product-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 1.2rem;
+    text-decoration: none;
+    transition: gap 0.2s, color 0.4s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    padding: 0;
+  }
+  .product-cta:hover { gap: 0.7rem; }
+  body.mode-negocios .product-cta { color: var(--accent2); }
+
+  /* ─── CONFIGURATOR MODAL ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .modal-overlay.active { display: flex; zoom: 83.33%; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalIn 0.3s ease both;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.96) translateY(10px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .modal-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .modal-subtitle {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+  .modal-close {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .modal-close:hover { color: var(--text); border-color: var(--muted); }
+  .modal-body { padding: 2rem; }
+
+  .config-section { margin-bottom: 2rem; }
+  .config-section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .badge-included {
+    background: rgba(0,229,176,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(0,229,176,0.2);
+    font-size: 0.7rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 100px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    user-select: none;
+  }
+  .feature-item:hover { border-color: rgba(0,229,176,0.2); background: rgba(0,229,176,0.02); }
+  .feature-item.selected { border-color: var(--accent); background: rgba(0,229,176,0.05); }
+  .feature-item.included { opacity: 0.7; cursor: default; }
+
+  .feature-check {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+    margin-top: 1px;
+  }
+  .feature-item.selected .feature-check  { background: var(--accent); border-color: var(--accent); }
+  .feature-item.included .feature-check  { background: rgba(0,229,176,0.2); border-color: var(--accent); }
+  .check-icon { color: #000; font-size: 0.75rem; font-weight: 800; display: none; }
+  .feature-item.selected .check-icon,
+  .feature-item.included .check-icon { display: block; }
+  .feature-info { flex: 1; }
+  .feature-name  { font-weight: 500; font-size: 0.92rem; margin-bottom: 0.2rem; }
+  .feature-desc  { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+  .feature-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--accent);
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+
+  .modal-footer {
+    padding: 0.8rem 2rem 1.2rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    bottom: 0;
+  }
+  .price-breakdown {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .price-label { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .price-total { font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; }
+  .price-support { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+
+  .support-info {
+    background: rgba(124,111,239,0.08);
+    border: 1px solid rgba(124,111,239,0.2);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  .support-info strong { color: var(--text); }
+
+  .support-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .support-opt {
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-align: center;
+  }
+  .support-opt:hover { border-color: rgba(0,229,176,0.3); }
+  .support-opt.selected { border-color: var(--accent); background: rgba(0,229,176,0.04); }
+  .support-opt-name  { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .support-opt-price { font-size: 1rem; font-weight: 700; color: var(--accent); font-family: 'Inter', sans-serif; }
+  .support-opt-desc  { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.4; }
+
+  .contract-section {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .contract-section h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+    color: var(--text);
+  }
+  .contract-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+  .contract-list li {
+    font-size: 0.83rem;
+    color: var(--muted);
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.5;
+  }
+  .contract-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-size: 0.75rem; font-weight: 700; }
+  .contract-list.cross li::before { content: '✗'; color: var(--danger); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  .form-field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-field.full { grid-column: 1 / -1; }
+  .form-field label { font-size: 0.78rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    transition: border-color 0.2s;
+    outline: none;
+    width: 100%;
+  }
+  .form-field input:focus,
+  .form-field textarea:focus,
+  .form-field select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,229,176,0.1);
+  }
+  .form-field textarea { resize: vertical; min-height: 90px; }
+  .form-field select option { background: var(--surface2); }
+
+  .summary-box {
+    background: var(--surface2);
+    border: 1px solid rgba(0,229,176,0.2);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+  }
+  .summary-box .summary-title { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 0.8rem; color: var(--accent); font-size: 0.9rem; }
+  .summary-row { display: flex; justify-content: space-between; color: var(--muted); margin-bottom: 0.4rem; font-size: 0.83rem; }
+  .summary-row.total { color: var(--text); font-weight: 700; border-top: 1px solid var(--border); padding-top: 0.7rem; margin-top: 0.7rem; font-size: 0.95rem; }
+  .summary-row.total span:last-child { color: var(--accent); }
+
+  .success-screen { text-align: center; padding: 3rem 2rem; }
+  .success-icon {
+    width: 70px; height: 70px;
+    background: rgba(0,229,176,0.1);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2rem;
+  }
+  .success-title { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 0.8rem; }
+  .success-sub { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+
+  .modal-tabs { display: flex; gap: 0.5rem; padding: 1.2rem 2rem 0; }
+  .modal-tab {
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+  }
+  .modal-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+  /* ─── COMO FUNCIONA ─── */
+  #como-funciona { background: var(--bg); }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 3.5rem;
+  }
+  .step-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(0,229,176,0.2);
+    line-height: 1;
+    margin-bottom: 1rem;
+    transition: -webkit-text-stroke-color 0.4s;
+  }
+  body.mode-negocios .step-num { -webkit-text-stroke-color: rgba(124,111,239,0.25); }
+  .step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  .step-desc  { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
+
+  /* ─── SOPORTE ─── */
+  #soporte { background: var(--surface); }
+  .support-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+  .support-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: border-color 0.25s, transform 0.25s;
+  }
+  .support-card:hover { border-color: rgba(0,229,176,0.2); transform: translateY(-3px); }
+  .support-card.featured {
+    border-color: var(--accent);
+    position: relative;
+    overflow: hidden;
+  }
+  .support-card.featured::before {
+    content: 'MÁS POPULAR';
+    position: absolute;
+    top: 1rem; right: -1.5rem;
+    background: var(--accent);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    padding: 0.3rem 2.5rem;
+    transform: rotate(35deg);
+  }
+  .support-card-name { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.3rem; }
+  .support-card-pct { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin: 1rem 0; }
+  .support-card-pct span { font-size: 1rem; color: var(--muted); font-weight: 400; }
+  .support-includes { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.5rem; }
+  .support-includes li { font-size: 0.83rem; color: var(--muted); padding-left: 1.3rem; position: relative; }
+  .support-includes li::before { content: '✓'; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .support-includes li.no::before { content: '✗'; color: var(--danger); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp   { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 2rem 2.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  footer strong { color: var(--accent); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 993px) {
+    h1 { font-weight: 700; }
+    .stat-num { font-size: 1.8rem; }
+    nav ul { display: none; }
+    .hero-stats { gap: 1rem; }
+    .support-cards { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .support-options { grid-template-columns: 1fr; }
+    .perspective-switch .switch-label { display: none; }
+  }
+  @media (max-width: 480px) {
+    .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAV WITH PERSPECTIVE SWITCH
+════════════════════════════════════════════ -->
+<nav>
+  <div class="logo">ai<span>.</span>engineer</div>
+
+  <ul>
+    <li><a href="#productos">Productos</a></li>
+    <li><a href="#como-funciona">Cómo funciona</a></li>
+    <li><a href="#soporte">Soporte</a></li>
+    <li><a href="#productos" class="nav-cta">Contratar</a></li>
+  </ul>
+
+  <!-- SWITCH -->
+  <div class="perspective-switch" id="perspectiveSwitch" onclick="togglePerspective()" title="Cambiar perspectiva de contenido">
+    <span class="switch-label left">Técnico</span>
+    <div class="switch-track">
+      <div class="switch-thumb"></div>
+    </div>
+    <span class="switch-label right">Negocios</span>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero" id="inicio">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-inner">
+
+    <div class="hero-badge">AI Software Engineer disponible</div>
+
+    <!-- TÍTULOS HERO — dinámicos -->
+    <h1>
+      <span data-view="tecnico">
+        Sistemas de IA<br><span class="line-accent">para producción</span><br>desde el día uno
+      </span>
+      <span data-view="negocios" style="display:none">
+        Dejá de perder clientes<br><span class="line-accent">por falta de</span><br>atención 24/7
+      </span>
+    </h1>
+
+    <p class="hero-sub" data-view="tecnico">
+      Arquitecturas RAG, LLM fine-tuning, bases de datos vectoriales e integraciones vía API. Configurá el stack técnico que necesitás y conocé el precio final antes de firmar.
+    </p>
+    <p class="hero-sub" data-view="negocios" style="display:none">
+      Automatizá la atención al cliente, reducí costos operativos y aumentá tus ventas con sistemas de IA listos para usar. Sin equipo técnico propio, sin dolores de cabeza.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#productos" class="btn-primary">Ver productos →</a>
+      <a href="#como-funciona" class="btn-ghost">Cómo funciona</a>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">6</div>
+        <div class="stat-label" data-view="tecnico">verticales</div>
+        <div class="stat-label" data-view="negocios" style="display:none">industrias</div>
+      </div>
+      <div>
+        <div class="stat-num">48h</div>
+        <div class="stat-label" data-view="tecnico">primer deploy</div>
+        <div class="stat-label" data-view="negocios" style="display:none">primer prototipo</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label" data-view="tecnico">código propio, sin vendor lock-in</div>
+        <div class="stat-label" data-view="negocios" style="display:none">tuyo, sin dependencias ocultas</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     PRODUCTOS
+════════════════════════════════════════════ -->
+<section id="productos">
+  <div class="section-inner">
+    <div class="products-header">
+      <div>
+        <div class="section-tag">Productos pre-configurados</div>
+        <h2 class="section-title">
+          <span data-view="tecnico">Elegí tu stack<br>de IA</span>
+          <span data-view="negocios" style="display:none">Elegí la solución<br>para tu negocio</span>
+        </h2>
+      </div>
+      <p class="section-sub" data-view="tecnico">
+        Arquitecturas base + módulos opcionales. Pagas por lo que implementás, sin licencias ni infraestructura compartida.
+      </p>
+      <p class="section-sub" data-view="negocios" style="display:none">
+        Cada producto resuelve un problema real de negocio. Vos elegís las funcionalidades que necesitás y pagás solo por eso.
+      </p>
+    </div>
+
+    <div class="products-grid">
+
+      <!-- ── CARD 1: RESTAURANTE ── -->
+      <div class="product-card" onclick="openConfigurator('restaurant')">
+        <div class="product-icon" style="background:rgba(255,150,50,0.1)">🍽️</div>
+
+        <div class="view-badge tecnico-badge">Arquitectura RAG</div>
+        <div class="view-badge negocios-badge">Atención 24/7</div>
+
+        <div class="product-name">RAG para Restaurante</div>
+
+        <p class="product-desc" data-view="tecnico">
+          Pipeline RAG con embeddings sobre menú, reservas y políticas del local. Conecta documentos privados con un LLM vía API sin exponer datos propietarios.
+        </p>
+        <p class="product-desc" data-view="negocios" style="display:none">
+          Tu restaurante responde consultas, toma reservas y recomienda platos las 24hs, sin que tengas que contratar más personal de atención.
+        </p>
+
+        <ul class="product-bullets" data-view="tecnico">
+          <li>Base de datos vectorial (Pinecone / Chroma)</li>
+          <li>Embeddings optimizados por dominio gastronómico</li>
+          <li>API REST para integración con cualquier frontend</li>
+          <li>Chunking semántico de carta y políticas</li>
+        </ul>
+        <ul class="product-bullets" data-view="negocios" style="display:none">
+          <li>Reduce hasta un 70% las consultas repetitivas al personal</li>
+          <li>Toma reservas automáticamente sin intervención humana</li>
+          <li>Disponible en WhatsApp, web o cualquier canal</li>
+          <li>ROI positivo desde el primer mes de operación</li>
+        </ul>
+
+        <div class="product-from">Desde</div>
+        <div class="product-price">$800 USD</div>
+        <button class="product-cta">Configurar →</button>
+      </div>
+
+      <!-- ── CARD 2: E-COMMERCE ── -->
+      <div class="product-card" onclick="openConfigurator('ecommerce')">
+        <div class="product-icon" style="background:rgba(0,180,255,0.1)">🛒</div>
+
+        <div class="view-badge tecnico-badge">Motor Semántico + LLM</div>
+        <div class="view-badge negocios-badge">+Ventas Automáticas</div>
+
+        <div class="product-name">IA para E-Commerce</div>
+
+        <p class="product-desc" data-view="tecnico">
+          Motor de búsqueda semántica sobre catálogo vectorizado + sistema de recomendaciones con filtrado colaborativo potenciado por LLM para queries en lenguaje natural.
+        </p>
+        <p class="product-desc" data-view="negocios" style="display:none">
+          Tus clientes encuentran lo que buscan al instante, reciben recomendaciones personalizadas y tienen atención inmediata. Más conversiones, menos carritos abandonados.
+        </p>
+
+        <ul class="product-bullets" data-view="tecnico">
+          <li>Búsqueda vectorial sobre catálogo (Elasticsearch / pgvector)</li>
+          <li>Pipeline de embeddings actualizable en tiempo real</li>
+          <li>Modelo de recomendaciones con historial de sesión</li>
+          <li>Webhooks para sincronización de inventario</li>
+        </ul>
+        <ul class="product-bullets" data-view="negocios" style="display:none">
+          <li>Aumenta el ticket promedio con sugerencias de upsell automáticas</li>
+          <li>Reduce el tiempo de búsqueda de productos en un 60%</li>
+          <li>Atención postventa 24/7 sin costo adicional de RRHH</li>
+          <li>Integración con tu tienda en menos de una semana</li>
+        </ul>
+
+        <div class="product-from">Desde</div>
+        <div class="product-price">$1.200 USD</div>
+        <button class="product-cta">Configurar →</button>
+      </div>
+
+      <!-- ── CARD 3: SALUD ── -->
+      <div class="product-card" onclick="openConfigurator('salud')">
+        <div class="product-icon" style="background:rgba(0,229,176,0.1)">🏥</div>
+
+        <div class="view-badge tecnico-badge">NLP + Clasificación</div>
+        <div class="view-badge negocios-badge">Menos esperas, más turnos</div>
+
+        <div class="product-name">Asistente para Clínica</div>
+
+        <p class="product-desc" data-view="tecnico">
+          Sistema NLP para clasificación de consultas médicas, derivación por especialidad mediante reglas + embeddings y gestión de turnos con integración a calendar APIs.
+        </p>
+        <p class="product-desc" data-view="negocios" style="display:none">
+          Tus pacientes reservan turnos, reciben recordatorios y obtienen información del servicio en segundos. Menos llamadas al administrativo, más pacientes atendidos.
+        </p>
+
+        <ul class="product-bullets" data-view="tecnico">
+          <li>Clasificador de síntomas con modelo fine-tuneado en salud</li>
+          <li>Integración con Google Calendar / sistema de turnos propio</li>
+          <li>Lógica de derivación configurable por especialidad</li>
+          <li>Cumplimiento de buenas prácticas en manejo de datos sensibles</li>
+        </ul>
+        <ul class="product-bullets" data-view="negocios" style="display:none">
+          <li>Libera al personal administrativo de llamadas repetitivas</li>
+          <li>Reduce las inasistencias con recordatorios automáticos</li>
+          <li>Disponible fuera del horario de atención de la clínica</li>
+          <li>Escala sin contratar más recepcionistas</li>
+        </ul>
+
+        <div class="product-from">Desde</div>
+        <div class="product-price">$1.500 USD</div>
+        <button class="product-cta">Configurar →</button>
+      </div>
+
+      <!-- ── CARD 4: LEGAL ── -->
+      <div class="product-card" onclick="openConfigurator('legal')">
+        <div class="product-icon" style="background:rgba(200,160,255,0.1)">⚖️</div>
+
+        <div class="view-badge tecnico-badge">Document RAG + OCR</div>
+        <div class="view-badge negocios-badge">Captación de clientes 24/7</div>
+
+        <div class="product-name">Asistente Legal</div>
+
+        <p class="product-desc" data-view="tecnico">
+          RAG sobre base jurídica propia con OCR para análisis de documentos. Pipeline de extracción de entidades (partes, fechas, cláusulas) mediante modelos de lenguaje especializados.
+        </p>
+        <p class="product-desc" data-view="negocios" style="display:none">
+          Capturá leads calificados a cualquier hora, prefiltrá consultas según el tipo de caso y llegá a la primera reunión con toda la info del cliente ya recopilada.
+        </p>
+
+        <ul class="product-bullets" data-view="tecnico">
+          <li>OCR + parser de contratos y documentos legales</li>
+          <li>Extracción de entidades con NER fine-tuneado en jurisprudencia</li>
+          <li>Encriptación en reposo y en tránsito de datos sensibles</li>
+          <li>Ruteo de casos a abogado por área de práctica</li>
+        </ul>
+        <ul class="product-bullets" data-view="negocios" style="display:none">
+          <li>No pierdas consultas por estar fuera de horario de atención</li>
+          <li>El sistema prefiltra y califica el caso antes de la primer llamada</li>
+          <li>Ahorrá horas de relevamiento inicial en cada consulta</li>
+          <li>Imagen profesional con tecnología de punta desde el primer contacto</li>
+        </ul>
+
+        <div class="product-from">Desde</div>
+        <div class="product-price">$2.000 USD</div>
+        <button class="product-cta">Configurar →</button>
+      </div>
+
+      <!-- ── CARD 5: INMOBILIARIA ── -->
+      <div class="product-card" onclick="openConfigurator('inmobiliaria')">
+        <div class="product-icon" style="background:rgba(255,210,0,0.1)">🏠</div>
+
+        <div class="view-badge tecnico-badge">Búsqueda Vectorial + ML</div>
+        <div class="view-badge negocios-badge">Leads calificados automáticos</div>
+
+        <div class="product-name">IA Inmobiliaria</div>
+
+        <p class="product-desc" data-view="tecnico">
+          Motor de búsqueda semántica sobre propiedades vectorizadas por características y zona. Scoring de leads mediante modelo ML entrenado con historial de conversiones.
+        </p>
+        <p class="product-desc" data-view="negocios" style="display:none">
+          Tus brokers reciben leads ya calificados e interesados. El sistema filtra propiedades, agenda visitas y nutre al potencial comprador hasta que esté listo para cerrar.
+        </p>
+
+        <ul class="product-bullets" data-view="tecnico">
+          <li>Embeddings multi-atributo sobre ficha de propiedades</li>
+          <li>Modelo de scoring de intención de compra/alquiler</li>
+          <li>Integración con CRM vía Webhook / REST API</li>
+          <li>Motor de valoración basado en comparables del mercado</li>
+        </ul>
+        <ul class="product-bullets" data-view="negocios" style="display:none">
+          <li>Tus brokers dedican tiempo a cerrar, no a prefiltar</li>
+          <li>Respuesta instantánea al lead en su horario, no en el tuyo</li>
+          <li>Reduce el ciclo de venta con seguimiento automático</li>
+          <li>Análisis de mercado en tiempo real para ganar más mandatos</li>
+        </ul>
+
+        <div class="product-from">Desde</div>
+        <div class="product-price">$1.800 USD</div>
+        <button class="product-cta">Configurar →</button>
+      </div>
+
+      <!-- ── CARD 6: CUSTOM ── -->
+      <div class="product-card" onclick="openConfigurator('custom')">
+        <div class="product-icon" style="background:rgba(124,111,239,0.1)">⚙️</div>
+
+        <div class="view-badge tecnico-badge">Arquitectura a medida</div>
+        <div class="view-badge negocios-badge">Tu problema, mi solución</div>
+
+        <div class="product-name">Proyecto a Medida</div>
+
+        <p class="product-desc" data-view="tecnico">
+          Diseño de arquitectura de IA desde cero: selección de modelos, stack de datos, estrategia de fine-tuning y plan de integración según los requerimientos técnicos de tu sistema.
+        </p>
+        <p class="product-desc" data-view="negocios" style="display:none">
+          ¿Tu industria no está en la lista? Diagnosticamos tu proceso, identificamos dónde la IA genera más impacto y construimos la solución específica para tu negocio.
+        </p>
+
+        <ul class="product-bullets" data-view="tecnico">
+          <li>Evaluación de viabilidad técnica y selección de modelos</li>
+          <li>Prototipo funcional en 48–72hs para validar el enfoque</li>
+          <li>Propuesta de arquitectura detallada antes de desarrollo</li>
+          <li>Sin dependencias de plataformas externas si no se requiere</li>
+        </ul>
+        <ul class="product-bullets" data-view="negocios" style="display:none">
+          <li>Diagnóstico gratuito del proceso que querés automatizar</li>
+          <li>Estimación del ROI esperado antes de comprometerte</li>
+          <li>Entregables claros con fechas reales desde el inicio</li>
+          <li>Contrato con alcance fijo, sin costos ocultos ni sorpresas</li>
+        </ul>
+
+        <div class="product-from">Desde</div>
+        <div class="product-price">Cotizar</div>
+        <button class="product-cta">Contactar →</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     CÓMO FUNCIONA
+════════════════════════════════════════════ -->
+<section id="como-funciona">
+  <div class="section-inner">
+    <div class="section-tag">Proceso</div>
+    <h2 class="section-title">
+      <span data-view="tecnico">Transparente,<br>sin black boxes</span>
+      <span data-view="negocios" style="display:none">Simple, rápido,<br>sin sorpresas</span>
+    </h2>
+
+    <div class="steps-grid">
+
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-title" data-view="tecnico">Configurá el stack</div>
+        <div class="step-title" data-view="negocios" style="display:none">Elegí las funcionalidades</div>
+        <div class="step-desc" data-view="tecnico">Seleccionás los módulos técnicos que necesitás y ves el precio total en tiempo real. Sin reuniones previas, sin estimaciones vagas.</div>
+        <div class="step-desc" data-view="negocios" style="display:none">Elegís qué problema querés resolver primero y ves el precio final antes de hablar con nadie. Sin compromisos previos.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-title" data-view="tecnico">Validación técnica</div>
+        <div class="step-title" data-view="negocios" style="display:none">Te contacto en 24hs</div>
+        <div class="step-desc" data-view="tecnico">Recibo tu configuración, reviso la viabilidad técnica y te contacto en menos de 24h para confirmar el alcance y los requerimientos de integración.</div>
+        <div class="step-desc" data-view="negocios" style="display:none">Recibo tu pedido y te llamo o escribo para confirmar los detalles, responder dudas y agendar el inicio del proyecto.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-title" data-view="tecnico">Contrato con alcance técnico</div>
+        <div class="step-title" data-view="negocios" style="display:none">Firmamos el contrato</div>
+        <div class="step-desc" data-view="tecnico">Contrato que especifica endpoints, modelos utilizados, SLAs y qué contempla el soporte post-entrega. Código fuente en repositorio privado tuyo.</div>
+        <div class="step-desc" data-view="negocios" style="display:none">Documento claro con qué entrego, en cuánto tiempo y qué incluye el soporte. Sin letra chica, sin cláusulas sorpresa.</div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-title" data-view="tecnico">Deploy y documentación</div>
+        <div class="step-title" data-view="negocios" style="display:none">Entrega y lo olvidás</div>
+        <div class="step-desc" data-view="tecnico">Entrego el sistema en producción con documentación técnica, manual de operación y semana de garantía para hotfixes post-lanzamiento.</div>
+        <div class="step-desc" data-view="negocios" style="display:none">El sistema funciona desde el día uno. El soporte mensual se encarga de que siga así, vos te concentrás en tu negocio.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════
+     SOPORTE
+════════════════════════════════════════════ -->
+<section id="soporte">
+  <div class="section-inner">
+    <div class="section-tag">Planes de soporte</div>
+    <h2 class="section-title">
+      <span data-view="tecnico">El sistema corre.<br>Vos dormís tranquilo.</span>
+      <span data-view="negocios" style="display:none">El sistema trabaja<br>mientras vos cerrás ventas.</span>
+    </h2>
+    <p class="section-sub" data-view="tecnico">
+      El soporte cubre el correcto funcionamiento del sistema entregado y sus componentes técnicos. Cambios de alcance se cotizan como nuevo proyecto.
+    </p>
+    <p class="section-sub" data-view="negocios" style="display:none">
+      El soporte garantiza que la solución siga generando resultados mes a mes. Los cambios sustanciales se hablan y presupuestan por separado.
+    </p>
+
+    <div class="support-cards">
+      <div class="support-card">
+        <div class="support-card-name">Sin soporte</div>
+        <div style="color:var(--muted);font-size:0.85rem;margin-bottom:0.5rem">Pago único</div>
+        <div class="support-card-pct">$0 <span>/mes</span></div>
+        <ul class="support-includes">
+          <li data-view="tecnico">Entrega del código fuente comentado</li>
+          <li data-view="negocios" style="display:none">El sistema es tuyo, te lo entrego completo</li>
+          <li>Documentación técnica y de uso</li>
+          <li>1 semana de garantía post-entrega</li>
+          <li class="no" data-view="tecnico">Monitoreo de infraestructura</li>
+          <li class="no" data-view="negocios" style="display:none">Garantía de funcionamiento continuo</li>
+          <li class="no">Resolución de bugs futuros</li>
+        </ul>
+      </div>
+
+      <div class="support-card featured">
+        <div class="support-card-name">Soporte Estándar</div>
+        <div style="color:var(--muted);font-size:0.85rem;margin-bottom:0.5rem">7% del valor del proyecto</div>
+        <div class="support-card-pct">7% <span>/mes</span></div>
+        <ul class="support-includes">
+          <li data-view="tecnico">Sistema funcionando garantizado</li>
+          <li data-view="negocios" style="display:none">Tu negocio no se detiene por errores técnicos</li>
+          <li>Resolución de bugs del código entregado</li>
+          <li data-view="tecnico">Actualizaciones de dependencias y parches</li>
+          <li data-view="negocios" style="display:none">Actualizaciones menores de contenido</li>
+          <li>Respuesta en menos de 48h</li>
+          <li class="no" data-view="tecnico">Nuevas integraciones o endpoints</li>
+          <li class="no" data-view="negocios" style="display:none">Nuevas funcionalidades</li>
+        </ul>
+      </div>
+
+      <div class="support-card">
+        <div class="support-card-name">Soporte Premium</div>
+        <div style="color:var(--muted);font-size:0.85rem;margin-bottom:0.5rem">15% del valor del proyecto</div>
+        <div class="support-card-pct">15% <span>/mes</span></div>
+        <ul class="support-includes">
+          <li>Todo lo del plan Estándar</li>
+          <li>Respuesta en menos de 24h</li>
+          <li data-view="tecnico">Hasta 3 refactors / mejoras menores por mes</li>
+          <li data-view="negocios" style="display:none">Hasta 3 mejoras menores por mes</li>
+          <li data-view="tecnico">Revisión mensual de performance y métricas LLM</li>
+          <li data-view="negocios" style="display:none">Revisión mensual de resultados y uso</li>
+          <li data-view="tecnico">Llamada técnica mensual de 30 min</li>
+          <li data-view="negocios" style="display:none">Llamada de seguimiento mensual</li>
+          <li class="no" data-view="tecnico">Desarrollo de nuevas features</li>
+          <li class="no" data-view="negocios" style="display:none">Desarrollo de funcionalidades nuevas</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>Hecho por <strong>ai.engineer</strong> — Servicios de Inteligencia Artificial Profesionales</p>
+  <p style="margin-top:0.4rem">Todos los proyectos incluyen contrato. El soporte no cubre cambios sustanciales, que se cotizan por separado.</p>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════
+     MODAL CONFIGURADOR
+════════════════════════════════════════════ -->
+<div class="modal-overlay" id="configuratorModal">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────
+   PERSPECTIVE SWITCH
+───────────────────────────── */
+let currentMode = 'tecnico'; // default
+
+function togglePerspective() {
+  const body = document.body;
+  const isNegocios = body.classList.contains('mode-negocios');
+
+  // 1. Fade-out phase
+  body.classList.add('switching');
+
+  setTimeout(() => {
+    // 2. Swap content
+    if (isNegocios) {
+      body.classList.remove('mode-negocios');
+      currentMode = 'tecnico';
+    } else {
+      body.classList.add('mode-negocios');
+      currentMode = 'negocios';
+    }
+
+    // 3. Handle block-level [data-view] elements manually for display
+    swapViews();
+
+    // 4. Remove switching class → triggers fade-in via CSS transition
+    setTimeout(() => {
+      body.classList.remove('switching');
+    }, 40);
+
+  }, 200); // matches transition duration
+}
+
+function swapViews() {
+  const tecnicoEls  = document.querySelectorAll('[data-view="tecnico"]');
+  const negociosEls = document.querySelectorAll('[data-view="negocios"]');
+
+  if (currentMode === 'negocios') {
+    tecnicoEls.forEach(el  => { el.style.display = 'none'; });
+    negociosEls.forEach(el => {
+      el.style.display = el.tagName === 'SPAN' ? 'inline' : 'block';
+      // Trigger reflow for transition
+      void el.offsetWidth;
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  } else {
+    negociosEls.forEach(el => { el.style.display = 'none'; });
+    tecnicoEls.forEach(el  => {
+      el.style.display = el.tagName === 'SPAN' ? 'inline' : 'block';
+      void el.offsetWidth;
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  }
+}
+
+/* ─────────────────────────────
+   PRODUCTS DATA
+───────────────────────────── */
+const PRODUCTS = {
+  restaurant: {
+    name: "RAG para Restaurante 🍽️",
+    base: 800,
+    baseFeatures: [
+      { name: "Limpieza y procesamiento de datos", desc: "Normalización del menú, precios y horarios" },
+      { name: "Base de conocimiento vectorial", desc: "Indexación semántica de toda la información" },
+      { name: "Chatbot básico de consultas", desc: "Responde preguntas sobre el restaurante" },
+    ],
+    extras: [
+      { id: "reservas", name: "Sistema de reservas inteligente", desc: "El bot gestiona disponibilidad y reservas en tiempo real", price: 300 },
+      { id: "multiidioma", name: "Soporte multiidioma", desc: "Español, inglés, portugués y más", price: 200 },
+      { id: "whatsapp", name: "Integración WhatsApp Business", desc: "El asistente funciona directo en WhatsApp", price: 400 },
+      { id: "recomendaciones", name: "Recomendaciones personalizadas", desc: "Sugiere platos según preferencias del cliente", price: 250 },
+      { id: "analytics", name: "Dashboard de analytics", desc: "Métricas de uso, preguntas frecuentes, satisfacción", price: 350 },
+      { id: "web", name: "Widget para sitio web", desc: "Chatbot embebido en tu web con diseño personalizado", price: 200 },
+    ]
+  },
+  ecommerce: {
+    name: "IA para E-Commerce 🛒",
+    base: 1200,
+    baseFeatures: [
+      { name: "Limpieza y procesamiento de datos", desc: "Catálogo de productos, precios e inventario" },
+      { name: "Motor de búsqueda semántica", desc: "Búsqueda inteligente por descripción, no solo por nombre" },
+      { name: "Asistente de atención básico", desc: "Responde consultas de productos y estado de pedidos" },
+    ],
+    extras: [
+      { id: "recomendaciones", name: "Motor de recomendaciones", desc: "Productos relacionados según historial y comportamiento", price: 500 },
+      { id: "whatsapp", name: "Atención por WhatsApp", desc: "Integración con WhatsApp Business API", price: 400 },
+      { id: "analytics", name: "Dashboard de conversiones", desc: "Métricas de qué buscan y por qué no compran", price: 400 },
+      { id: "upsell", name: "Sistema de upsell automático", desc: "Sugiere upgrades y complementos al momento de compra", price: 350 },
+      { id: "postventa", name: "Atención post-venta", desc: "Seguimiento de envíos, devoluciones y garantías", price: 300 },
+      { id: "multiidioma", name: "Soporte multiidioma", desc: "Escala tu tienda a mercados internacionales", price: 250 },
+    ]
+  },
+  salud: {
+    name: "Asistente para Clínica 🏥",
+    base: 1500,
+    baseFeatures: [
+      { name: "Limpieza y procesamiento de datos", desc: "Servicios, especialidades, médicos y cobertura" },
+      { name: "Base de conocimiento médica", desc: "FAQs, preparación para estudios, info de turnos" },
+      { name: "Asistente de consultas básico", desc: "Responde preguntas generales sobre la clínica" },
+    ],
+    extras: [
+      { id: "turnos", name: "Sistema de turnos online", desc: "Reserva y cancelación de turnos por IA", price: 600 },
+      { id: "derivacion", name: "Derivación inteligente", desc: "El bot determina qué especialista necesita el paciente", price: 400 },
+      { id: "recordatorios", name: "Recordatorios automáticos", desc: "SMS/WhatsApp de confirmación de turno", price: 300 },
+      { id: "triaje", name: "Triaje básico por síntomas", desc: "Orientación preliminar según síntomas descriptos", price: 500 },
+      { id: "whatsapp", name: "Canal WhatsApp", desc: "Toda la atención por WhatsApp", price: 400 },
+      { id: "analytics", name: "Panel de consultas frecuentes", desc: "Qué preguntan más los pacientes", price: 250 },
+    ]
+  },
+  legal: {
+    name: "Asistente Legal ⚖️",
+    base: 2000,
+    baseFeatures: [
+      { name: "Limpieza y procesamiento de datos", desc: "Servicios, áreas de práctica, honorarios y proceso" },
+      { name: "Base de conocimiento jurídica", desc: "Indexación de documentos, FAQs y especialidades" },
+      { name: "Asistente de consultas preliminares", desc: "Primera orientación sobre el tipo de caso" },
+    ],
+    extras: [
+      { id: "documentos", name: "Análisis de documentos", desc: "El sistema analiza contratos o documentos subidos por el cliente", price: 800 },
+      { id: "derivacion", name: "Derivación por especialidad", desc: "Asigna el caso al abogado indicado automáticamente", price: 400 },
+      { id: "formularios", name: "Formularios de captación", desc: "El bot recopila datos del caso antes de la primer reunión", price: 350 },
+      { id: "whatsapp", name: "Canal WhatsApp", desc: "Atención inicial por WhatsApp", price: 400 },
+      { id: "confidencialidad", name: "Cifrado y confidencialidad reforzada", desc: "Encriptación adicional para datos sensibles", price: 500 },
+      { id: "analytics", name: "Reporte de consultas", desc: "Qué tipo de casos llegan y en qué horarios", price: 300 },
+    ]
+  },
+  inmobiliaria: {
+    name: "IA Inmobiliaria 🏠",
+    base: 1800,
+    baseFeatures: [
+      { name: "Limpieza y procesamiento de datos", desc: "Propiedades, precios, zonas y características" },
+      { name: "Motor de búsqueda semántica", desc: "Búsqueda por descripción natural del cliente" },
+      { name: "Asistente de consultas básico", desc: "Responde sobre propiedades disponibles" },
+    ],
+    extras: [
+      { id: "recomendaciones", name: "Motor de recomendaciones", desc: "Sugiere propiedades según perfil y preferencias del cliente", price: 500 },
+      { id: "visitas", name: "Agendamiento de visitas", desc: "El bot coordina visitas a propiedades automáticamente", price: 400 },
+      { id: "valoracion", name: "Estimación de valor de propiedad", desc: "Análisis preliminar de mercado para el cliente", price: 600 },
+      { id: "whatsapp", name: "Atención por WhatsApp", desc: "El cliente busca propiedades por WhatsApp", price: 400 },
+      { id: "crm", name: "Integración con CRM", desc: "Carga automática de leads al CRM de la inmobiliaria", price: 350 },
+      { id: "analytics", name: "Dashboard de leads", desc: "Métricas de qué buscan y cuáles convierten", price: 300 },
+    ]
+  },
+  custom: {
+    name: "Proyecto a Medida ⚙️",
+    base: 0,
+    baseFeatures: [
+      { name: "Análisis de requerimientos", desc: "Revisión detallada de tu caso de uso" },
+      { name: "Propuesta técnica personalizada", desc: "Arquitectura y stack recomendado" },
+      { name: "Cotización a medida", desc: "Precio según complejidad real del proyecto" },
+    ],
+    extras: []
+  }
+};
+
+let currentProduct = null;
+let selectedExtras  = new Set();
+let selectedSupport = 'estandar';
+let currentTab      = 'config';
+
+function openConfigurator(productKey) {
+  currentProduct  = productKey;
+  selectedExtras  = new Set();
+  selectedSupport = 'estandar';
+  currentTab      = 'config';
+  renderModal();
+  document.getElementById('configuratorModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('configuratorModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function calculateTotal() {
+  const p = PRODUCTS[currentProduct];
+  let total = p.base;
+  selectedExtras.forEach(id => {
+    const feat = p.extras.find(e => e.id === id);
+    if (feat) total += feat.price;
+  });
+  return total;
+}
+
+function getSupportMonthly() {
+  const total = calculateTotal();
+  if (currentProduct === 'custom') return 0;
+  if (selectedSupport === 'none')     return 0;
+  if (selectedSupport === 'estandar') return Math.round(total * 0.07);
+  if (selectedSupport === 'premium')  return Math.round(total * 0.15);
+  return 0;
+}
+
+function toggleExtra(id) {
+  selectedExtras.has(id) ? selectedExtras.delete(id) : selectedExtras.add(id);
+  renderModal();
+}
+
+function setSupport(type) { selectedSupport = type; renderModal(); }
+function setTab(tab)      { currentTab = tab; renderModal(); }
+
+function renderModal() {
+  const p       = PRODUCTS[currentProduct];
+  const total   = calculateTotal();
+  const monthly = getSupportMonthly();
+  const isCustom = currentProduct === 'custom';
+
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">${p.name}</div>
+        <div class="modal-subtitle">${isCustom ? 'Completá el formulario y te contacto en 24h' : 'Configurá las funcionalidades que necesitás'}</div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    ${!isCustom ? `
+    <div class="modal-tabs">
+      <button class="modal-tab ${currentTab === 'config'   ? 'active' : ''}" onclick="setTab('config')">1. Configurar</button>
+      <button class="modal-tab ${currentTab === 'contrato' ? 'active' : ''}" onclick="setTab('contrato')">2. Contrato</button>
+      <button class="modal-tab ${currentTab === 'contacto' ? 'active' : ''}" onclick="setTab('contacto')">3. Contratar</button>
+    </div>` : ''}
+
+    <div class="modal-body">${renderTabContent(p, total, monthly, isCustom)}</div>
+
+    ${!isCustom && currentTab !== 'contrato' ? `
+    <div class="modal-footer">
+      <div class="price-breakdown">
+        <div>
+          <div class="price-label">Total del proyecto</div>
+          <div class="price-total">$${total.toLocaleString()} USD</div>
+          ${monthly > 0 ? `<div class="price-support">+ $${monthly} USD/mes (soporte ${selectedSupport === 'estandar' ? 'estándar' : 'premium'})</div>` : ''}
+        </div>
+        ${currentTab === 'config'
+          ? `<button class="btn-primary" onclick="setTab('contrato')">Ver contrato →</button>`
+          : `<button class="btn-primary" onclick="setTab('contacto')">Contratar ahora →</button>`
+        }
+      </div>
+    </div>` : ''}
+  `;
+}
+
+function renderTabContent(p, total, monthly, isCustom) {
+  if (isCustom || currentTab === 'contacto') return renderContactForm(p, total, monthly, isCustom);
+  if (currentTab === 'contrato') return renderContract(p, total, monthly);
+  return renderConfig(p);
+}
+
+function renderConfig(p) {
+  const extrasHtml = p.extras.length > 0 ? `
+    <div class="config-section">
+      <div class="config-section-title">Funcionalidades adicionales</div>
+      ${p.extras.map(f => `
+        <div class="feature-item ${selectedExtras.has(f.id) ? 'selected' : ''}" onclick="toggleExtra('${f.id}')">
+          <div class="feature-check"><span class="check-icon">✓</span></div>
+          <div class="feature-info">
+            <div class="feature-name">${f.name}</div>
+            <div class="feature-desc">${f.desc}</div>
+          </div>
+          <div class="feature-price">+$${f.price}</div>
+        </div>`).join('')}
+    </div>` : '';
+
+  return `
+    <div class="config-section">
+      <div class="config-section-title">Incluido en la base <span class="badge-included">Incluido</span></div>
+      ${p.baseFeatures.map(f => `
+        <div class="feature-item included">
+          <div class="feature-check"><span class="check-icon">✓</span></div>
+          <div class="feature-info">
+            <div class="feature-name">${f.name}</div>
+            <div class="feature-desc">${f.desc}</div>
+          </div>
+          <div class="feature-price" style="color:var(--muted)">Base</div>
+        </div>`).join('')}
+    </div>
+    ${extrasHtml}
+    <div class="config-section">
+      <div class="config-section-title">Plan de soporte mensual</div>
+      <div class="support-options">
+        <div class="support-opt ${selectedSupport === 'none'     ? 'selected' : ''}" onclick="setSupport('none')">
+          <div class="support-opt-name">Sin soporte</div>
+          <div class="support-opt-price">$0</div>
+          <div class="support-opt-desc">Pago único, entrega de código</div>
+        </div>
+        <div class="support-opt ${selectedSupport === 'estandar' ? 'selected' : ''}" onclick="setSupport('estandar')">
+          <div class="support-opt-name">Estándar</div>
+          <div class="support-opt-price">7%/mes</div>
+          <div class="support-opt-desc">Bugs + funcionamiento garantizado</div>
+        </div>
+        <div class="support-opt ${selectedSupport === 'premium'  ? 'selected' : ''}" onclick="setSupport('premium')">
+          <div class="support-opt-name">Premium</div>
+          <div class="support-opt-price">15%/mes</div>
+          <div class="support-opt-desc">Estándar + mejoras menores + prioridad</div>
+        </div>
+      </div>
+      <div class="support-info">
+        <strong>¿Qué cubre el soporte?</strong> Que el sistema siga funcionando correctamente, resolución de bugs del código entregado y actualizaciones menores de contenido.
+        <strong>No cubre</strong> cambios de funcionalidad, nuevas integraciones ni rediseños, los cuales se cotizan como un nuevo proyecto.
+      </div>
+    </div>`;
+}
+
+function renderContract(p, total, monthly) {
+  return `
+    <div style="margin-bottom:1.5rem">
+      <h3 style="font-family:Syne,sans-serif;font-weight:800;font-size:1.1rem;margin-bottom:0.5rem">Términos del contrato</h3>
+      <p style="font-size:0.85rem;color:var(--muted);line-height:1.7">Este es el alcance acordado para tu proyecto. Al contratar, aceptás estos términos.</p>
+    </div>
+    <div class="contract-section">
+      <h4>✅ Entregables incluidos</h4>
+      <ul class="contract-list">
+        <li>Sistema de IA completamente funcional según configuración elegida</li>
+        <li>Código fuente documentado y en repositorio privado</li>
+        <li>Manual de uso básico</li>
+        <li>Puesta en producción inicial</li>
+        <li>1 semana de garantía post-entrega para corrección de errores</li>
+      </ul>
+    </div>
+    <div class="contract-section">
+      <h4>🛡️ Qué cubre el soporte contratado</h4>
+      <ul class="contract-list">
+        <li>El sistema funcione correctamente tal como fue entregado</li>
+        <li>Resolución de bugs presentes en el código entregado</li>
+        <li>Actualizaciones menores de contenido (ej: cambiar texto, agregar ítem al menú)</li>
+        ${selectedSupport === 'premium' ? '<li>Hasta 3 mejoras menores por mes (UI, textos, flujos simples)</li><li>Llamada de seguimiento mensual de 30 minutos</li>' : ''}
+        <li>Tiempo de respuesta: ${selectedSupport === 'premium' ? 'menos de 24h' : 'menos de 48h'}</li>
+      </ul>
+    </div>
+    <div class="contract-section">
+      <h4>🚫 Lo que NO cubre el soporte</h4>
+      <ul class="contract-list cross">
+        <li>Nuevas funcionalidades no presentes en la configuración original</li>
+        <li>Cambios sustanciales en el diseño o arquitectura del sistema</li>
+        <li>Integraciones con nuevas plataformas o servicios</li>
+        <li>Problemas causados por cambios realizados por terceros al sistema</li>
+        <li>Cualquier cambio que requiera más de 4 horas de desarrollo</li>
+      </ul>
+      <p style="font-size:0.78rem;color:var(--muted);margin-top:1rem;line-height:1.5">Los cambios fuera del soporte se cotizan y presupuestan como un nuevo proyecto independiente.</p>
+    </div>
+    <div class="contract-section">
+      <h4>💰 Resumen económico</h4>
+      <ul class="contract-list">
+        <li>Precio del proyecto: $${total.toLocaleString()} USD (pago único)</li>
+        ${monthly > 0 ? `<li>Soporte mensual: $${monthly} USD/mes (${selectedSupport === 'estandar' ? '7%' : '15%'} del valor del proyecto)</li>` : '<li>Sin soporte mensual contratado</li>'}
+        <li>El soporte puede cancelarse con 30 días de preaviso</li>
+        <li>Pago del proyecto: 50% adelanto, 50% contra entrega</li>
+      </ul>
+    </div>
+    <div style="display:flex;gap:1rem;justify-content:flex-end;margin-top:1.5rem">
+      <button class="btn-ghost" onclick="setTab('config')">← Editar</button>
+      <button class="btn-primary" onclick="setTab('contacto')">Aceptar y contratar →</button>
+    </div>`;
+}
+
+function renderContactForm(p, total, monthly, isCustom) {
+  const summaryHtml = !isCustom ? `
+    <div class="summary-box">
+      <div class="summary-title">📋 Resumen de tu pedido</div>
+      <div class="summary-row"><span>Producto base</span><span>$${p.base.toLocaleString()} USD</span></div>
+      ${Array.from(selectedExtras).map(id => {
+        const f = p.extras.find(e => e.id === id);
+        return f ? `<div class="summary-row"><span>${f.name}</span><span>+$${f.price} USD</span></div>` : '';
+      }).join('')}
+      <div class="summary-row total"><span>Total proyecto</span><span>$${total.toLocaleString()} USD</span></div>
+      ${monthly > 0 ? `<div class="summary-row"><span>Soporte mensual (${selectedSupport})</span><span>$${monthly} USD/mes</span></div>` : ''}
+    </div>` : '';
+
+  return `
+    ${summaryHtml}
+    <div class="form-grid">
+      <div class="form-field">
+        <label>Nombre</label>
+        <input type="text" id="f-nombre" placeholder="Tu nombre" />
+      </div>
+      <div class="form-field">
+        <label>Empresa</label>
+        <input type="text" id="f-empresa" placeholder="Nombre de la empresa (opcional)" />
+      </div>
+      <div class="form-field">
+        <label>Email</label>
+        <input type="email" id="f-email" placeholder="tu@email.com" />
+      </div>
+      <div class="form-field">
+        <label>WhatsApp</label>
+        <input type="text" id="f-tel" placeholder="+54 9 11 xxxx-xxxx" />
+      </div>
+      <div class="form-field full">
+        <label>${isCustom ? 'Describí tu proyecto' : 'Comentarios adicionales'}</label>
+        <textarea id="f-mensaje" placeholder="${isCustom
+          ? 'Contame qué necesitás, tu industria, el problema que querés resolver...'
+          : 'Aclaraciones, preguntas o necesidades especiales...'}"></textarea>
+      </div>
+      <div class="form-field full">
+        <label>¿Cómo preferís que te contacte?</label>
+        <select id="f-contacto">
+          <option value="email">Email</option>
+          <option value="whatsapp">WhatsApp</option>
+          <option value="videollamada">Videollamada (Zoom/Meet)</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-primary" style="width:100%" onclick="submitForm()">
+      ${isCustom ? 'Enviar consulta →' : 'Confirmar pedido y contratar →'}
+    </button>
+    <p style="font-size:0.75rem;color:var(--muted);text-align:center;margin-top:1rem">
+      Te contacto en menos de 24h hábiles para confirmar los detalles y el contrato formal.
+    </p>`;
+}
+
+function submitForm() {
+  const nombre = document.getElementById('f-nombre')?.value.trim();
+  const email  = document.getElementById('f-email')?.value.trim();
+  if (!nombre || !email) { alert('Por favor completá al menos tu nombre y email.'); return; }
+
+  const p = PRODUCTS[currentProduct];
+  document.getElementById('modalContent').innerHTML = `
+    <div class="success-screen">
+      <div class="success-icon">✓</div>
+      <div class="success-title">¡Pedido recibido!</div>
+      <p class="success-sub">
+        Hola <strong>${nombre}</strong>, recibí tu solicitud para <strong>${p.name}</strong>.<br><br>
+        Te voy a contactar en las próximas <strong>24 horas hábiles</strong> para confirmar los detalles y enviarte el contrato formal.<br><br>
+        Revisá tu email <strong>${email}</strong>.
+      </p>
+      <button class="btn-primary" style="margin-top:2rem" onclick="closeModal()">Cerrar</button>
+    </div>`;
+}
+
+// Cerrar con ESC o click fuera
+document.getElementById('configuratorModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
