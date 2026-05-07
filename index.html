@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Engineer — Soluciones de Inteligencia Artificial</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #09090f;
@@ -25,21 +22,6 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
 
-  /* Zoom para computadoras */
-  body {
-    zoom: 125%; 
-  }
-
-  /* Restablecer a normal para celulares */
-  @media (max-width: 993px) {
-     body {
-          zoom: 100%;
-     }
-     .modal-overlay.active {
-          zoom: 100%;
-     }
-  }
-
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
@@ -47,8 +29,6 @@
     overflow-x: hidden;
     line-height: 1.6;
   }
-  
-  
 
   body::before {
     content: '';
@@ -76,7 +56,7 @@
   }
 
   .logo {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Syne', sans-serif;
     font-weight: 800;
     font-size: 1.15rem;
     letter-spacing: -0.02em;
@@ -293,7 +273,7 @@
   }
 
   h1 {
-    font-family: 'inter', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: clamp(3rem, 6vw, 5.5rem);
     font-weight: 800;
     line-height: 1.0;
@@ -380,7 +360,7 @@
     animation: fadeUp 0.7s 0.4s ease both;
   }
   .stat-num {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 2.2rem;
     font-weight: 800;
     color: var(--accent);
@@ -413,7 +393,7 @@
   body.mode-negocios .section-tag { color: var(--accent2); }
 
   .section-title {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: clamp(2rem, 4vw, 3rem);
     font-weight: 800;
     letter-spacing: -0.025em;
@@ -558,7 +538,7 @@
     letter-spacing: 0.05em;
   }
   .product-price {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.4rem;
     font-weight: 800;
     color: var(--accent);
@@ -597,7 +577,7 @@
     justify-content: center;
     padding: 1.5rem;
   }
-  .modal-overlay.active { display: flex; zoom: 83.33%; }
+  .modal-overlay.active { display: flex; }
 
   .modal {
     background: var(--surface);
@@ -627,7 +607,7 @@
     align-items: flex-start;
   }
   .modal-title {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -736,7 +716,7 @@
     gap: 1rem;
   }
   .price-label { font-size: 0.82rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
-  .price-total { font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; }
+  .price-total { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; }
   .price-support { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
 
   .support-info {
@@ -767,8 +747,8 @@
   }
   .support-opt:hover { border-color: rgba(0,229,176,0.3); }
   .support-opt.selected { border-color: var(--accent); background: rgba(0,229,176,0.04); }
-  .support-opt-name  { font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
-  .support-opt-price { font-size: 1rem; font-weight: 700; color: var(--accent); font-family: 'Inter', sans-serif; }
+  .support-opt-name  { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .support-opt-price { font-size: 1rem; font-weight: 700; color: var(--accent); font-family: 'Syne', sans-serif; }
   .support-opt-desc  { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; line-height: 1.4; }
 
   .contract-section {
@@ -875,7 +855,7 @@
     margin-top: 3.5rem;
   }
   .step-num {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Syne', sans-serif;
     font-size: 3.5rem;
     font-weight: 800;
     color: transparent;
@@ -885,7 +865,7 @@
     transition: -webkit-text-stroke-color 0.4s;
   }
   body.mode-negocios .step-num { -webkit-text-stroke-color: rgba(124,111,239,0.25); }
-  .step-title { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  .step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
   .step-desc  { font-size: 0.87rem; color: var(--muted); line-height: 1.6; }
 
   /* ─── SOPORTE ─── */
@@ -921,8 +901,8 @@
     padding: 0.3rem 2.5rem;
     transform: rotate(35deg);
   }
-  .support-card-name { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.3rem; }
-  .support-card-pct { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin: 1rem 0; }
+  .support-card-name { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.3rem; }
+  .support-card-pct { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; margin: 1rem 0; }
   .support-card-pct span { font-size: 1rem; color: var(--muted); font-weight: 400; }
   .support-includes { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.5rem; }
   .support-includes li { font-size: 0.83rem; color: var(--muted); padding-left: 1.3rem; position: relative; }
@@ -949,7 +929,7 @@
   footer strong { color: var(--accent); }
 
   /* ─── RESPONSIVE ─── */
-  @media (max-width: 993px) {
+  @media (max-width: 768px) {
     h1 { font-weight: 700; }
     .stat-num { font-size: 1.8rem; }
     nav ul { display: none; }
@@ -958,6 +938,20 @@
     .form-grid { grid-template-columns: 1fr; }
     .support-options { grid-template-columns: 1fr; }
     .perspective-switch .switch-label { display: none; }
+    .switch-current-label {
+      display: inline;
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+    body.mode-negocios .switch-current-label { color: var(--accent2); }
+  }
+  @media (min-width: 994px) {
+    .switch-current-label { display: none; }
   }
   @media (max-width: 480px) {
     .hero-stats { flex-wrap: wrap; gap: 1.5rem; }
@@ -986,6 +980,7 @@
       <div class="switch-thumb"></div>
     </div>
     <span class="switch-label right">Negocios</span>
+    <span class="switch-current-label" id="switchCurrentLabel">Técnico</span>
   </div>
 </nav>
 
@@ -1441,7 +1436,10 @@ function togglePerspective() {
     // 3. Handle block-level [data-view] elements manually for display
     swapViews();
 
-    // 4. Remove switching class → triggers fade-in via CSS transition
+    // 4. Update mobile current-mode label
+    document.getElementById('switchCurrentLabel').textContent = currentMode === 'negocios' ? 'Negocios' : 'Técnico';
+
+    // 5. Remove switching class → triggers fade-in via CSS transition
     setTimeout(() => {
       body.classList.remove('switching');
     }, 40);
